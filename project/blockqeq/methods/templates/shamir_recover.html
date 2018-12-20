@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Shamir recovering result
+{% endblock %}
+
+{% block content %}
+    <h1>I guess your secret was...</h1>
+
+    <h2 class="display-1">{{M}}</h2>
+    <h3>Wanna try something <a href="/">different</a>? Or maybe try <a href="/shamir/">again</a>?</h3>
+    <h4>Also...</h4>
+    <div class="row text-left">
+        <h4>Here is the python code if you want to go deeper</h4>
+        <div class="col-12">
+       <pre><code>
+def prime_test(n, k=128):
+    if n == 2 or n == 3:
+        return True
+    if n <= 1 or n % 2 == 0:
+        return False
+    # find r and s
+    s = 0
+    r = n - 1
+    while r & 1 == 0:
+        s += 1
+        r //= 2
+    # do k tests
+    for _ in range(k):
+        a = randrange(2, n - 1)
+        x = pow(a, r, n)
+        if x != 1 and x != n - 1:
+            j = 1
+            while j < s and x != n - 1:
+                x = pow(x, 2, n)
+                if x == 1:
+                    return False
+                j += 1
+            if x != n - 1:
+                return False
+    return True
+
+def generate_prime_candidate(length):
+    p = getrandbits(length)
+    p |= (1 << length - 1) | 1 # big and not even
+    return p
+
+
+def generate_prime_number(length=1024):
+    p = 4
+    while not prime_test(p, 128):
+        p = generate_prime_candidate(length)
+    return p
+
+
+def make_Shamirs(secret, t, n, p): # generate p with *generate_prime_number* function
+    # secret
+    coef = [secret]
+    # generate our polynom (a_0, a_1, ...)
+    coef = np.hstack((coef, randint(p, size=t - 1)))
+    # points to share
+    shares = []
+    # computing the values, use x = 1, 2, 3, 4,...
+    for i in range(1, n + 1):
+        value = 0
+        for j in range(t - 1, -1, -1):
+            value = value * i + coef[j]
+        shares.append((i, value))
+    return np.array(shares)
+
+
+def Shamirs_rec_secret(shares, t, p):
+    secret = 0
+    for i in range(t):
+        olala = 1
+        for j in range(t):
+            if j != i:
+                olala = (olala * shares[j][0] * pow(int(shares[j][0] - shares[i][0]), p - 2, p)) % p
+        secret = (secret + shares[i][1] * olala) % p
+    return secret
+       </code></pre>
+        </div>
+    </div>
+{% endblock %}

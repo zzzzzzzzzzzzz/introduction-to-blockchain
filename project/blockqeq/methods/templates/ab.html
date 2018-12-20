@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Asmuth Bloom scheme
+{% endblock %}
+
+{% block content %}
+    <h1>Asmuth Bloom scheme</h1>
+    <div class="row">
+        <div class="col-8 text-left">
+            <h2>Brief description</h2>
+            <p>
+                The Chinese remainder theorem states that for a given system of simultaneous congruence equations, the solution is unique in some Z/nZ  (), with n > 0 under some appropriate conditions on the congruences. Secret sharing can thus use this theorem to produce the shares presented in the congruence equations and the secret could be recovered by solving the system of congruences to get the unique solution, which will be the secret to recover.
+            </p>
+            <p>
+                <ol>
+                    <li>
+                        Generate prime \( p > M \)
+                    </li>
+                    <li>
+                        Generate the sequence of random integers \( d_1, d_2, \dotso , d_n \) such that:
+                        $$
+                            \forall i: d_i > p \\
+                            \forall i: d_i < d_{i+1} \\
+                            d_1 \cdot d_2 \cdot \dotso d_m > p \cdot d_{n-m+2} \cdot d_{n-m+3} \cdot \dotso \cdot d_n
+                        $$
+                    </li>
+                    <li>
+                        Generate random \( r \) and calculate \( M^{'} = M + rp \)
+                    </li>
+                    <li>
+                        Calculate shares: \( k_i = M^{'} \  mod\   d_i  \)
+                    </li>
+                    <li>
+                        Each participant get \( \{ p, d_i, k_i\} \)
+                    </li>
+                </ol>
+            </p>
+        </div>
+        <div class="col-4">
+            <h2>Live example</h2>
+            <form method="POST">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="YourSecret">Your secret</label>
+                <input type="text" class="form-control" id="YourSecret" name="secret" placeholder="Enter the secret (the number)">
+              </div>
+              <div class="form-group">
+                <label for="YourThreshold">Desired threshold</label>
+                <input type="text" class="form-control" id="YourThreshold" name="threshold" placeholder="The number of sufficient participants to restore the secret">
+              </div>
+              <div class="form-group">
+                <label for="NumberOfParticipants">Number of participants</label>
+                <input type="text" class="form-control" id="NumberOfParticipants" name="participants" placeholder="The number of participants who will share the secret">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

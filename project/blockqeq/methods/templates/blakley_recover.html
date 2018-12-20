@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Blakley recovering result
+{% endblock %}
+
+{% block content %}
+    <h1>I guess your secret was...</h1>
+
+    <h2 class="display-1">{{M}}</h2>
+    <h3>Wanna try something <a href="/">different</a>? Or maybe try <a href="/blakley/">again</a>?</h3>
+    <h4>Also...</h4>
+    <div class="row text-left">
+        <h4>Here is the python code if you want to go deeper</h4>
+        <div class="col-12">
+       <pre><code>
+def prime_test(n, k=128):
+    if n == 2 or n == 3:
+        return True
+    if n <= 1 or n % 2 == 0:
+        return False
+    # find r and s
+    s = 0
+    r = n - 1
+    while r & 1 == 0:
+        s += 1
+        r //= 2
+    # do k tests
+    for _ in range(k):
+        a = randrange(2, n - 1)
+        x = pow(a, r, n)
+        if x != 1 and x != n - 1:
+            j = 1
+            while j < s and x != n - 1:
+                x = pow(x, 2, n)
+                if x == 1:
+                    return False
+                j += 1
+            if x != n - 1:
+                return False
+    return True
+
+def generate_prime_candidate(length):
+    p = getrandbits(length)
+    p |= (1 << length - 1) | 1 # big and not even
+    return p
+
+
+def generate_prime_number(length=1024):
+    p = 4
+    while not prime_test(p, 128):
+        p = generate_prime_candidate(length)
+    return p
+
+
+def make_Blakley(secret, t, n, p): # use *generate_prime_number* function for p
+    # Generate x vector, x_0 equals to secret
+    x = [secret]
+    x = np.hstack((x, randint(p, size=t - 1)))
+    # Generate Pascal Matrix (to avoid collinearity)
+    A = np.ones((n, t)).astype(int)
+    for r in range(1, n):
+        for c in range(1, t):
+            A[r, c] = (A[r, c - 1] + A[r - 1, c]) % p
+    # Generate y vector, where Ax = y
+    y = np.dot(A, x) % p
+    # Split keys
+    keys = [A[i].tolist() + [y[i]] for i in range(n)]
+    # Return keys
+    return np.array(keys)
+
+
+def Blakley_rec_secret(keys, p):
+    k = len(keys[0]) - 1
+    # make full-rank matrix and corresponding y
+    B = np.matrix([keys[i][:-1] for i in range(k)])[:k]
+    y = np.array([keys[i][-1] for i in range(k)])[:k]
+    for i in range(B.shape[0]):
+        y[i] = (y[i] * pow(int(B[i, i]), p - 2, p)) % p
+        B[i] = (B[i] * pow(int(B[i, i]), p - 2, p)) % p
+        for j in range(i + 1, B.shape[1]):
+            y[j] = (y[j] - B[j, i] * y[i]) % p
+            B[j] = (B[j] - B[j, i] * B[i]) % p
+    x = np.array(list([0] * k))
+    for i in range(k - 1, -1, -1):
+        x[i] = y[i]
+        for j in range(i + 1, k):
+            x[i] = (x[i] - x[j] * B[i, j]) % p
+    return x[0]
+       </code></pre>
+        </div>
+    </div>
+{% endblock %}

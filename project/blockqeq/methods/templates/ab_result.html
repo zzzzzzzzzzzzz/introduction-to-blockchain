@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Asmuth Bloom scheme result
+{% endblock %}
+
+{% block content %}
+
+<h1>Asmuth Bloom scheme</h1>
+<div class="row">
+    <div class="col-8 text-left">
+        <h2>Here are your shares</h2>
+        <p>
+            <ol>
+                {% for elem in shares %}
+                <li>{{ elem }}</li>
+                {% endfor %}
+            </ol>
+        </p>
+    </div>
+    <div class="col-4">
+        <h2>Continue with secret restoration</h2>
+        <form method="POST" action="/ab_recover/">
+            {% csrf_token %}
+          <div class="form-group">
+            <label for="Shares">Your secret</label>
+              <textarea rows="{{m}}" class="form-control" id="Shares" name="shares" placeholder="Enter {{ m }} different shares">{{sample}}</textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

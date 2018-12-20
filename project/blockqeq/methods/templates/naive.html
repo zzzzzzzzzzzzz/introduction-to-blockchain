@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Naive scheme
+{% endblock %}
+
+{% block content %}
+    <h1>Naive scheme</h1>
+    <div class="row">
+        <div class="col-8 text-left">
+            <h2>Brief description</h2>
+            <p>
+                Suppose a group of people need to share a password for a treasure chest in such a way, that only together they can open it when it will be necessary
+            </p>
+            <p>
+                They can just divide a password into several parts and give a part to a group member. However there is a problem.
+                If the password has length n and every symbol is a digit in range from 0 to 9 then, it will be possible for some members of a group to make a coalition and use brute force method to find other parts of password. So this scheme is not safe.
+                It is much better if parts of password could have the same length as the password itself.
+                For example, one can generate \( m-1 \) (where m is a number of team members) random strings of length \( n \), where every symbol is a digit in range from 0 to 9 and create \( m \)-th as a difference of password and sum of previously generated \( m-1 \) strings by modulo 10.
+            </p>
+            <p>
+                Another problem appears: what if the presence of all group member should not be necessary for recovering the secret? What if all group members are agree, that treasure chest can be opened if ⅓ or ½ of group members needed?
+                In this case \( (t,n) \) - threshold secret sharing schemes can be used.
+                \( (t,n) \)-threshold scheme is the scheme in which the dealer gives each player a share in such a way that any group of t or more players can together reconstruct the secret but no group of fewer than t players can.
+            </p>
+        </div>
+        <div class="col-4">
+            <h2>Live example</h2>
+            <form method="POST">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="YourSecret">Your secret</label>
+                <input type="text" class="form-control" id="YourSecret" name="secret" placeholder="Enter the secret (the number)">
+              </div>
+              <div class="form-group">
+                <label for="NumberOfParticipants">Number of participants</label>
+                <input type="text" class="form-control" id="NumberOfParticipants" name="participants" placeholder="The number of participants who will share the secret">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

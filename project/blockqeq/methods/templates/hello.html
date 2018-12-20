@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Secret sharing schemes start page
+{% endblock %}
+
+{% block content %}
+
+    <main role="main" class="container">
+
+      <div class="starter-template">
+        <h1>Secret sharing schemes</h1>
+        <h2>Introduction to blockchain course project. Team 10</h2>
+          <img src="/static/images/sk.png">
+          <img src="/static/images/blakley.png">
+
+          <p class="lead">Navigate through these links to find out more about secret sharing schemes. </p>
+          <p>It's a good idea to start with the <a href="/naive/">naive</a> scheme</a></p>
+          <ul class="list-inline">
+              <li class="list-inline-item">
+                  <a href="ab/">
+                    Asmuth Bloom scheme
+                  </a>
+              </li>
+              <li class="list-inline-item">
+                  <a href="mignotte/">
+                    Mignotte scheme
+                  </a>
+              </li>
+              <li class="list-inline-item">
+                  <a href="naive/">
+                    Naive scheme
+                  </a>
+              </li>
+              <li class="list-inline-item">
+                  <a href="shamir/">
+                    Shamir scheme
+                  </a>
+              </li>
+              <li class="list-inline-item">
+                  <a href="blakley/">
+                    Blakley scheme
+                  </a>
+              </li>
+          </ul>
+      </div>
+
+    </main>
+
+{% endblock %}

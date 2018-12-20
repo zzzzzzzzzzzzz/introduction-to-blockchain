@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Blakley scheme
+{% endblock %}
+
+{% block content %}
+    <h1>Blakley scheme</h1>
+    <div class="row">
+        <div class="col-8 text-left">
+            <h2>Brief description</h2>
+            <p>
+            The idea is that any n nonparallel \( (n - 1) \) dimensional hyperplanes intersect at a specific point. The secret may be encoded as any single coordinate of the point (in our app by first).
+            Assume that we use \( (k, n) \) threshold scheme to share secret \( S = x_1 \), that is element of finite field of size \( P (0 < k <= n < P, S < P, P\  is\  prime) \).
+            At first we generate random \( x_2, ... , x_k \). After that we generate matrix \( A \) (\( size = (n, k) \)).
+            In app we use Pascal matrix to avoid the problem of  low-rank and calculate the vector \( y \).
+            Every participant is given a string of \( A \) and the corresponding component of \( y \) among the prime number (they define an equation). Given subset of \( k \) of these equations, we can find the vector \( x \).
+            The secret is \( x_1 \) (first component of \( x \)).
+
+            </p>
+            <p>
+                <ol>
+                    <li>
+
+                    </li>
+                </ol>
+            </p>
+        </div>
+        <div class="col-4">
+            <h2>Live example</h2>
+            <form method="POST">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="YourSecret">Your secret</label>
+                <input type="text" class="form-control" id="YourSecret" name="secret" placeholder="Enter the secret (the number)">
+              </div>
+              <div class="form-group">
+                <label for="YourThreshold">Desired threshold</label>
+                <input type="text" class="form-control" id="YourThreshold" name="threshold" placeholder="The number of sufficient participants to restore the secret">
+              </div>
+              <div class="form-group">
+                <label for="NumberOfParticipants">Number of participants</label>
+                <input type="text" class="form-control" id="NumberOfParticipants" name="participants" placeholder="The number of participants who will share the secret">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

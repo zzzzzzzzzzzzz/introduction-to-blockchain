@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Asmuth Bloom recovering result
+{% endblock %}
+
+{% block content %}
+    <h1>I guess your secret was...</h1>
+
+    <h2 class="display-1">{{M}}</h2>
+    <h3>Wanna try something <a href="/">different</a>? Or maybe try <a href="/ab/">again</a>?</h3>
+    <h4>Also...</h4>
+    <div class="row text-left">
+        <h4>Here is the python code if you want to go deeper</h4>
+        <div class="col-12">
+       <pre><code>
+def prime_test(n, k=128):
+    if n == 2 or n == 3:
+        return True
+    if n <= 1 or n % 2 == 0:
+        return False
+    # find r and s
+    s = 0
+    r = n - 1
+    while r & 1 == 0:
+        s += 1
+        r //= 2
+    # do k tests
+    for _ in range(k):
+        a = randrange(2, n - 1)
+        x = pow(a, r, n)
+        if x != 1 and x != n - 1:
+            j = 1
+            while j < s and x != n - 1:
+                x = pow(x, 2, n)
+                if x == 1:
+                    return False
+                j += 1
+            if x != n - 1:
+                return False
+    return True
+
+def generate_prime_candidate(length):
+    p = getrandbits(length)
+    p |= (1 << length - 1) | 1 # big and not even
+    return p
+
+
+def generate_prime_number(length=1024):
+    p = 4
+    while not prime_test(p, 128):
+        p = generate_prime_candidate(length)
+    return p
+
+def eea(a, b):
+    if b == 0: return (1, 0)
+    (q, r) = (a // b, a % b)
+    (s, t) = eea(b, r)
+    return (t, s - (q * t))
+
+
+def find_inverse(a, f):
+    b = eea(a, f)[0]
+    if b < 1: b += f  # we only want positive values
+    return b
+
+
+def gen_mut_prime_to_2(n):
+    k = generate_prime_number(n)
+    return k
+
+
+def gen_mut_prime_sequence(p, n):
+    d = []
+    while len(d) != n:
+        di = gen_mut_prime_to_2(n)
+        if di not in d:
+            d.append(di)
+    return sorted(d)
+
+
+def gen_sequence_for_AB(p, m, n):
+    found = False
+    while not found:
+        d = gen_mut_prime_sequence(p, n)
+        D = np.array(d)
+        if (np.prod(d[:m]) > p * np.prod(d[n - m + 1:])):
+            found = True
+            return d
+
+
+def Asmuth_Bloom_sharing(M, m, n):
+    Shares = np.zeros((n,3))
+    p = randint(M, 4*M)
+    d = gen_sequence_for_AB(p,m,n)
+    r = randint(1,2**n)
+    Mr = M+r*p
+    for i in range(n):
+        Shares[i,0] = p
+        Shares[i,1] = d[i]
+        Shares[i,2] = Mr%d[i]
+    return Shares.astype(int)
+
+
+def rec_secret_AB(Shares_k, k):
+    p = Shares_k[0, 0]
+    S = np.prod(Shares_k[:k, 1], axis=0)
+    Sd = np.zeros(k)
+    Sd_1 = np.zeros(k)
+    for i in range(k):
+        Sd[i] = int(S / Shares_k[i, 1])
+        Sd_1[i] = int(find_inverse(Sd[i], Shares_k[i, 1]))
+    Mr = sum(np.multiply(np.multiply(Shares_k[:k, 2], Sd), Sd_1)) % S
+    M = Mr % p
+    return int(M)
+       </code></pre>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Shamir scheme
+{% endblock %}
+
+{% block content %}
+    <h1>Shamir scheme</h1>
+    <div class="row">
+        <div class="col-8 text-left">
+            <h2>Brief description</h2>
+            <p>
+                The essential idea of the scheme is that k pints is sufficient to define a polynomial of degree \( k-1 \).
+                Assume that we use \( (k, n) \) threshold scheme to share secret \( S \), that is element of finite field of size \( P (0 < k <= n < P, S < P, P\ is\  prime) \).
+                Choose at random \( k - 1 \) positive integers \( a_1, a_2, \dotso a_{k - 1}\  (a_i < P) \), let \( a_0 = S \).
+                <br>
+                Build the polynomial \( f(x) = a_0 + a_1 x + … + a_n x^n \).
+                <br>
+                Next construct any n points (in our app \( x_i = i, i = 1,\dotso,n \) ).
+                Compute \( (x_i, f(x_i)) \) (this we can use Horner’s method).
+                <br>
+                Every participant is given a point along with the prime.
+                Given any subset of k of these pairs, we can find the coefficients of the polynomial. The secret is \( a_0 = S \).
+            </p>
+            <p>
+                Also, the interpolation is required.
+                The interpolation polynomial is (we have a set of points
+                $$
+                ((x_1, y_1), (x_2, y_2), …(x_k, y_k)) \\
+                L(x) = \sum_{i=1}^k y_i l_i(x), where\  l_i(x) = \prod\limits_{1 \leq m \leq k, m \neq i} \frac{x - x_m}{x_i - x_m}
+                $$
+                But using Largrange polynomials “as it is” isn’t efficient, since unused constant are calculated.
+                In app use optimized approach:
+                $$
+                S = \sum_{i=1}^k y_i \prod\limits_{1 \leq m \leq k, m \neq i} \frac{x_m}{x_m - x_i}
+                $$
+
+            </p>
+        </div>
+        <div class="col-4">
+            <h2>Live example</h2>
+            <form method="POST">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="YourSecret">Your secret</label>
+                <input type="text" class="form-control" id="YourSecret" name="secret" placeholder="Enter the secret (the number)">
+              </div>
+              <div class="form-group">
+                <label for="YourThreshold">Desired threshold</label>
+                <input type="text" class="form-control" id="YourThreshold" name="threshold" placeholder="The number of sufficient participants to restore the secret">
+              </div>
+              <div class="form-group">
+                <label for="NumberOfParticipants">Number of participants</label>
+                <input type="text" class="form-control" id="NumberOfParticipants" name="participants" placeholder="The number of participants who will share the secret">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

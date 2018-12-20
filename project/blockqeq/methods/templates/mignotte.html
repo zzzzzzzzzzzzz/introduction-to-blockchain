@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+
+{% block pagetitle %}
+Mignotte scheme
+{% endblock %}
+
+{% block content %}
+    <h1>Mignotte scheme</h1>
+    <div class="row">
+        <div class="col-8 text-left">
+            <h2>Brief description</h2>
+            <p>
+                The Chinese remainder theorem states that for a given system of simultaneous congruence equations, the solution is unique in some Z/nZ  (), with n > 0 under some appropriate conditions on the congruences. Secret sharing can thus use this theorem to produce the shares presented in the congruence equations and the secret could be recovered by solving the system of congruences to get the unique solution, which will be the secret to recover.
+            </p>
+            <p>
+                <ol>
+                    <li>
+                        Before running the algorithm we need to generate (t,n)-Mignotte's sequence:
+                        $$
+                            p_1 < p_2 < \dotso < p_n \\
+                            \prod^{k-2}_{i=0} p_{n-i} < \prod^{k}_{i=1}p_i \\
+                            d_1, d_2, \dotso, d_n \\
+                            \forall i:\ d_i>p\\ \forall i:\ d_i < d_{i+1} \\
+                            \prod^{t}_{i=1} d_i > \prod^{n}_{n-t+2}
+                        $$
+                    </li>
+                    <li>
+                        The chosen secret should satisfy:
+                        $$
+                            \beta < S < \alpha \\
+                            \alpha = \prod_{i}^{k} p_i,\  \beta = \prod_{i=0}^{k-2} p_{n-i}
+                        $$
+                    </li>
+                    <li>
+                        Shares are \( I_i = S\ mod\ p_i \) and \( k_i = M\ \mod d_i \Rightarrow \{d_i,k_i\} \)
+                    </li>
+                </ol>
+            </p>
+        </div>
+        <div class="col-4">
+            <h2>Live example</h2>
+            <p>Now choose the secret in \( \alpha={{alpha}} \) < \( S \) < \( \beta={{beta}} \)</p>
+            <form method="POST" action="/mignotte_second_step/">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="YourSecret">Your secret</label>
+                <input type="text" class="form-control" id="YourSecret" name="secret" placeholder="Enter the secret (the number)">
+              </div>
+              <div class="form-group">
+                <label for="YourThreshold">Desired threshold</label>
+                <input type="text" class="form-control" id="YourThreshold" value="{{m}}" name="threshold" placeholder="The number of sufficient participants to restore the secret">
+              </div>
+              <div class="form-group">
+                <label for="NumberOfParticipants">Number of participants</label>
+                <input type="text" class="form-control" id="NumberOfParticipants" value="{{n}}" name="participants" placeholder="The number of participants who will share the secret">
+              </div>
+             <div class="form-group">
+                <label for="Sequence">Mignotte sequence</label>
+                <input type="text" class="form-control" id="Sequence" value="{{sequence}}" name="sequence" placeholder="Generate mignotte sequence">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
