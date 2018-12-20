@@ -27,11 +27,12 @@ def abscheme(request):
 def parse_shares_str(shares_str):
     res_tmp = []
     shares_str = shares_str.replace('[', '')
-    shares_str = shares_str.replace(']', '')
+    #shares_str = shares_str.replace(']', '')
     shares_str = shares_str.replace('.', '')
-    for row in shares_str.split('\r\n'):
-        res_tmp.append(row.split(' '))
+    for row in shares_str.split(']\r\n'):
+        res_tmp.append(row.replace(']','').split(' '))
 
+    print(shares_str)
     res = []
     for elem in res_tmp:
         r = []

@@ -25,7 +25,7 @@ Blakley scheme result
             {% csrf_token %}
           <div class="form-group">
             <label for="Shares">Your secret</label>
-              <textarea rows="{{m}}" class="form-control" id="Shares" name="shares" placeholder="Enter {{ m }} different shares">{{sample}}</textarea>
+              <textarea wrap="off" rows="{{m}}" class="form-control" id="Shares" name="shares" placeholder="Enter {{ m }} different shares">{{sample}}</textarea>
           </div>
             <div class="form-group">
             <label for="Prime">Your prime number</label>

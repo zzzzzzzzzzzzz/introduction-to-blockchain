@@ -20,6 +20,17 @@ def is_prime(num, test_count=1000):
     return True
 
 
+def powmod(base, degree, module):
+    degree = bin(degree)[2:]
+    r = 1
+
+    for i in range(len(degree) - 1, -1, -1):
+        r = (r * base ** int(degree[i])) % module
+        base = (base ** 2) % module
+
+    return r
+
+
 def generate_prime(M):
     found_prime = False
     while not found_prime:
@@ -306,8 +317,8 @@ def Blakley_rec_secret(keys, p):
     B = np.matrix([keys[i][:-1] for i in range(k)])[:k]
     y = np.array([keys[i][-1] for i in range(k)])[:k]
     for i in range(B.shape[0]):
-        y[i] = (y[i] * pow(int(B[i, i]), p - 2, p)) % p
-        B[i] = (B[i] * pow(int(B[i, i]), p - 2, p)) % p
+        y[i] = (y[i] * powmod(int(B[i, i]), p - 2, p)) % p
+        B[i] = (B[i] * powmod(int(B[i, i]), p - 2, p)) % p
         for j in range(i + 1, B.shape[1]):
             y[j] = (y[j] - B[j, i] * y[i]) % p
             B[j] = (B[j] - B[j, i] * B[i]) % p

@@ -25,7 +25,7 @@ Mignotte scheme result
             {% csrf_token %}
           <div class="form-group">
             <label for="Shares">Your secret</label>
-              <textarea rows="{{m}}" class="form-control" id="Shares" name="shares" placeholder="Enter {{ m }} different shares">{{sample}}</textarea>
+              <textarea wrap="soft" rows="{{m}}" class="form-control" id="Shares" name="shares" placeholder="Enter {{ m }} different shares">{{sample}}</textarea>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>

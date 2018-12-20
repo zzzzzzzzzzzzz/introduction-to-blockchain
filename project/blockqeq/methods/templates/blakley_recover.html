@@ -15,6 +15,17 @@ Blakley recovering result
         <h4>Here is the python code if you want to go deeper</h4>
         <div class="col-12">
        <pre><code>
+def powmod(base, degree, module):
+    degree = bin(degree)[2:]
+    r = 1
+
+    for i in range(len(degree) - 1, -1, -1):
+        r = (r * base ** int(degree[i])) % module
+        base = (base ** 2) % module
+
+    return r
+
+
 def prime_test(n, k=128):
     if n == 2 or n == 3:
         return True
